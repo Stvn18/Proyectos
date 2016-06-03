@@ -12,6 +12,11 @@ import android.widget.Toast;
 
 import gt.umg.bd.Consultas;
 
+
+/**
+ * Created by Steven Vargas, Dulce Cajas on 1/06/16.
+ */
+
 public class LoginActivity extends AppCompatActivity {
 
     private Button botonLogin;
