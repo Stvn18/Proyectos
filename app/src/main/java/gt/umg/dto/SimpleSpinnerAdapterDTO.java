@@ -1,20 +1,18 @@
 package gt.umg.dto;
 
 /**
- * Created by Steven Vargas and Dulce Cajas on 2/06/16.
+ * Created by Steven Vargas and Dulce Cajas on 3/06/16.
  */
-public class MenuDTO {
+public class SimpleSpinnerAdapterDTO {
 
     private int id;
-    private int icono;
     private String descripcion;
 
-    public MenuDTO() {
+    public SimpleSpinnerAdapterDTO() {
     }
 
-    public MenuDTO(int id, int icono, String descripcion) {
+    public SimpleSpinnerAdapterDTO(int id, String descripcion) {
         this.id = id;
-        this.icono = icono;
         this.descripcion = descripcion;
     }
 
@@ -24,14 +22,6 @@ public class MenuDTO {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getIcono() {
-        return icono;
-    }
-
-    public void setIcono(int icono) {
-        this.icono = icono;
     }
 
     public String getDescripcion() {

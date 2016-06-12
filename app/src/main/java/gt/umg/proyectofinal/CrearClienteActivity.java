@@ -41,7 +41,7 @@ public class CrearClienteActivity extends AppCompatActivity {
         chkDistribuido = (CheckBox) findViewById(R.id.CrearClienteDistribuido);
         listPaises = (Spinner) findViewById(R.id.CrearClientePais);
         listTiposEmpresa = (Spinner) findViewById(R.id.CrearClienteTipoEmpresa);
-        Button botonCrear = (Button) findViewById(R.id.crearClienteBotonCrear);
+        botonCrear = (Button) findViewById(R.id.crearClienteBotonCrear);
 
         try {
 
@@ -59,7 +59,6 @@ public class CrearClienteActivity extends AppCompatActivity {
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-
 
         botonCrear.setOnClickListener(new View.OnClickListener() {
             @Override

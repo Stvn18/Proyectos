@@ -1,13 +1,17 @@
 package gt.umg.bd;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import gt.umg.configuracion.configuracion;
+import gt.umg.dto.EmpresaClienteDTO;
 import gt.umg.dto.PaisDTO;
+import gt.umg.dto.ServiciosDTO;
+import gt.umg.dto.ServidorDTO;
 import gt.umg.dto.TipoEmpresaDTO;
+import gt.umg.dto.VentaDiariaDTO;
 
 /**
  * Created by Steven Vargas, Dulce Cajas on 1/06/16.
@@ -56,24 +60,30 @@ public class Consultas {
 
     public String login(String usuario, String password) throws Exception {
 
-        String sql = "select usuario, pass from usuario where usuario = '" + usuario + "'";
+        String sql = "select usuario, pass, id_usuario from usuario where usuario = '" + usuario + "'";
 
         ResultSet resultado = getDatos(sql);
 
         String _usuario = "";
         String _password = "";
 
+        int idUsuario = 0;
+
         if (resultado != null) {
             resultado.beforeFirst();
             while (resultado.next()) {
                 _usuario = resultado.getString("usuario");
                 _password = resultado.getString("pass");
+                idUsuario = resultado.getInt("id_usuario");
             }
         }
 
         if (!_usuario.equals("") && !_password.equals("")) {
 
             if (_password.equals(password)) {
+
+                configuracion.idUsuario = idUsuario;
+
                 return "OK";
             } else {
                 return "Contraseña incorrecta";
@@ -84,7 +94,7 @@ public class Consultas {
         }
     }
 
-    public String crearUsuario(String usuario, String password) throws Exception {
+    public String crearUsuario(String usuario, String password, int limiteVenta) throws Exception {
 
         String sql;
 
@@ -99,7 +109,7 @@ public class Consultas {
         }
 
         if (count == 0) {
-            sql = "INSERT INTO USUARIO (id_usuario, usuario, pass) VALUES (seq_usuario.nextval, '" + usuario + "', '" + password + "')";
+            sql = "INSERT INTO USUARIO (id_usuario, usuario, pass, limite_venta) VALUES (seq_usuario.nextval, '" + usuario + "', '" + password + "', " + limiteVenta + ")";
 
             ejecuta(sql);
 
@@ -196,5 +206,182 @@ public class Consultas {
         }
     }
 
+
+    public List<ServiciosDTO> getServicios() throws Exception {
+
+        List<ServiciosDTO> respuesta = new ArrayList<>();
+
+        ResultSet resultSet = getDatos("SELECT ID_SERVICIO, SERVICIO FROM servicio");
+
+        if (resultSet != null) {
+
+            resultSet.beforeFirst();
+
+            while (resultSet.next()) {
+                ServiciosDTO servicio = new ServiciosDTO();
+                servicio.setIdServicio(resultSet.getInt("ID_SERVICIO"));
+                servicio.setServicio(resultSet.getString("SERVICIO"));
+
+                respuesta.add(servicio);
+            }
+
+        }
+
+        return respuesta;
+    }
+
+    public List<EmpresaClienteDTO> getEmpresaCliente() throws Exception {
+
+        List<EmpresaClienteDTO> respuesta = new ArrayList<>();
+
+        ResultSet resultSet = getDatos("SELECT NOMBRE, DIRECCION, IP_PUBLICA, DISTRIBUIDO, ID_PAIS, TIPO_EMPRESA_ID " +
+                "FROM BDD_NUBE.EMPRESA_CLIENTE ");
+
+        if (resultSet != null) {
+            resultSet.beforeFirst();
+
+            while (resultSet.next()) {
+
+                EmpresaClienteDTO empresa = new EmpresaClienteDTO();
+
+                empresa.setNombre(resultSet.getString("NOMBRE"));
+                empresa.setDireccion(resultSet.getString("DIRECCION"));
+                empresa.setIpPublica(resultSet.getString("IP_PUBLICA"));
+                empresa.setDistribuido(resultSet.getString("DISTRIBUIDO"));
+                empresa.setIdPais(resultSet.getInt("ID_PAIS"));
+                empresa.setTipoEmpresaId(resultSet.getInt("TIPO_EMPRESA_ID"));
+
+                respuesta.add(empresa);
+            }
+        }
+
+        return respuesta;
+    }
+
+    public List<ServidorDTO> getServidores() throws Exception {
+
+        List<ServidorDTO> respuesta = new ArrayList<>();
+        ResultSet resultSet = getDatos("SELECT NOMBRE, CPU, TOTAL_DD, RAM, SISTEMA_OP, RENDIMIENTO, MARCA, ID_TSERV, ID_UBI FROM BDD_NUBE.SERVIDOR");
+
+        if (resultSet != null) {
+            resultSet.beforeFirst();
+
+            while (resultSet.next()) {
+
+                ServidorDTO servidor = new ServidorDTO();
+                servidor.setNombre(resultSet.getString("NOMBRE"));
+                servidor.setCpu(resultSet.getString("CPU"));
+                servidor.setTotalDD(resultSet.getString("TOTAL_DD"));
+                servidor.setRam(resultSet.getString("RAM"));
+                servidor.setSistemaOp(resultSet.getString("SISTEMA_OP"));
+                servidor.setRendimiento(resultSet.getString("RENDIMIENTO"));
+                servidor.setMarca(resultSet.getString("MARCA"));
+                servidor.setIdServ(resultSet.getInt("ID_TSERV"));
+                servidor.setIdUbi(resultSet.getInt("ID_UBI"));
+
+                respuesta.add(servidor);
+
+            }
+        }
+
+        return respuesta;
+
+    }
+
+    public int getVendidoPorUsuario() throws Exception {
+        String sql = " SELECT COALESCE(SUM(TAMANO.CANTIDAD_CONTRATADA),0) VENDIDO " +
+                " FROM CONTRATO_EMPRESA CONTRATO " +
+                "   INNER JOIN TAMANO_ESPACIO_CONTRATADO TAMANO " +
+                "  ON CONTRATO.id_contrato = TAMANO.id_contrato " +
+                " WHERE CONTRATO.id_usuario = " + configuracion.idUsuario;
+
+
+        Object o = getDato(sql);
+        int vendido = 0;
+        if (o != null) {
+            vendido = Integer.parseInt(o.toString());
+        }
+
+        return vendido;
+
+    }
+
+    public int getCantidadVentaPermitidaPorUsuario() throws Exception {
+
+        String sql = "select limite_venta from usuario where id_usuario = " + configuracion.idUsuario;
+
+        int cantidadPermitida = 0;
+        Object o = getDato(sql);
+
+        if (o != null) {
+            cantidadPermitida = Integer.parseInt(o.toString());
+        }
+
+        return cantidadPermitida;
+
+    }
+
+    public void crearContrato(int idEmpresa, int idServicio, int costoTotal, String fecha, int cantidad, int servidor) throws Exception {
+
+        String sql = "INSERT INTO BDD_NUBE.CONTRATO_EMPRESA (ID_CONTRATO, ID_EMPRESA, ID_SERVICIO, USADO_TOTAL, COSTO_TOTAL, FECHA, id_usuario) VALUES " +
+                "(seq_contrato.nextval, " + idEmpresa + ", " + idServicio + ", 0, " + costoTotal + ", TO_DATE('" + fecha + "', 'dd/MM/yyyy'), " + configuracion.idUsuario + " )";
+
+        ejecuta(sql);
+
+        int max = 0;
+
+        Object o = getDato(" select max(ID_CONTRATO) from  BDD_NUBE.CONTRATO_EMPRESA ");
+
+        if (o != null) {
+            max = Integer.parseInt(o.toString());
+        }
+
+        sql = "INSERT INTO BDD_NUBE.TAMANO_ESPACIO_CONTRATADO " +
+                " (ID_ESPACIO_C, CANTIDAD_CONTRATADA, ID_CONTRATO, ID_SERV) " +
+                " VALUES(seq_tamano.nextval, " + cantidad + ", " + max + ", " + servidor + ") ";
+
+        ejecuta(sql);
+
+        sql = "update TAM_ALMAC set USADO_V = USADO_V + " + cantidad + " where ID_SERV =  " + servidor;
+
+        ejecuta(sql);
+    }
+
+    public List<VentaDiariaDTO> getVentaDiariaByFecha(String fecha) throws Exception {
+
+        List<VentaDiariaDTO> respuesta = new ArrayList<>();
+
+        String sql = " SELECT EMPRESA_CLIENTE.nombre, SERVICIO.servicio, TAMANO_ESPACIO_CONTRATADO.cantidad_contratada, CONTRATO_EMPRESA.costo_total " +
+                " FROM CONTRATO_EMPRESA " +
+                "   INNER JOIN SERVICIO " +
+                "  ON SERVICIO.ID_SERVICIO = CONTRATO_EMPRESA.ID_SERVICIO " +
+                "   INNER JOIN TAMANO_ESPACIO_CONTRATADO " +
+                "  ON TAMANO_ESPACIO_CONTRATADO.ID_CONTRATO = CONTRATO_EMPRESA.ID_CONTRATO " +
+                "   INNER JOIN EMPRESA_CLIENTE " +
+                "  ON EMPRESA_CLIENTE.ID_EMPRESA = CONTRATO_EMPRESA.ID_EMPRESA " +
+                " WHERE CONTRATO_EMPRESA.fecha = TO_DATE ('" + fecha + "', 'dd/MM/yyyy') ";
+
+        ResultSet resultSet = getDatos(sql);
+
+        if (resultSet != null) {
+            resultSet.beforeFirst();
+
+            while (resultSet.next()) {
+
+                VentaDiariaDTO venta = new VentaDiariaDTO();
+
+                venta.setEmpresaNombre(resultSet.getString("NOMBRE"));
+                venta.setServicioNombre(resultSet.getString("SERVICIO"));
+                venta.setCantidadContratada(resultSet.getInt("CANTIDAD_CONTRATADA"));
+                venta.setContratoCostoTotal(resultSet.getInt("COSTO_TOTAL"));
+
+                respuesta.add(venta);
+
+            }
+        }
+
+        return respuesta;
+
+    }
 
 }

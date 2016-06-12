@@ -13,6 +13,7 @@ public class CrearUsuarioActivity extends AppCompatActivity {
 
     private EditText txtUsuarioNombre;
     private EditText txtUsuarioPassword;
+    private EditText txtUsuarioLimiteVenta;
     private Button botonCrear;
 
     @Override
@@ -23,6 +24,7 @@ public class CrearUsuarioActivity extends AppCompatActivity {
         txtUsuarioNombre = (EditText) findViewById(R.id.crearUsuarioNombre);
         txtUsuarioPassword = (EditText) findViewById(R.id.crearUsuarioPassword);
         botonCrear = (Button) findViewById(R.id.crearUsuarioBotonCrear);
+        txtUsuarioLimiteVenta = (EditText) findViewById(R.id.crearUsuarioLimiteVenta);
 
         botonCrear.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,15 +51,23 @@ public class CrearUsuarioActivity extends AppCompatActivity {
                 return;
             }
 
+            if (txtUsuarioLimiteVenta.getText().toString().equals("")) {
+                Toast.makeText(this, "Ingrese el limite de venta del usuario", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             Consultas c = new Consultas();
 
-            String respuesta = c.crearUsuario(txtUsuarioNombre.getText().toString(), txtUsuarioPassword.getText().toString());
+            String respuesta = c.crearUsuario(txtUsuarioNombre.getText().toString(), txtUsuarioPassword.getText().toString(), Integer.parseInt(txtUsuarioLimiteVenta.getText().toString()));
 
             if (respuesta.equals("OK")) {
                 Toast.makeText(this, "Usuario creado correctamente", Toast.LENGTH_SHORT).show();
 
                 txtUsuarioNombre.setText("");
                 txtUsuarioPassword.setText("");
+                txtUsuarioLimiteVenta.setText("");
+
+                txtUsuarioNombre.requestFocus();
 
             } else {
                 Toast.makeText(this, respuesta, Toast.LENGTH_SHORT).show();
