@@ -35,7 +35,7 @@ public class MenuActivity extends AppCompatActivity {
         menu.add(new MenuDTO(1, R.drawable.crear_usuario, "Crear usuario"));
         menu.add(new MenuDTO(2, R.drawable.vender, "Vender"));
         menu.add(new MenuDTO(3, R.drawable.cargar, "Ventas del dia"));
-        menu.add(new MenuDTO(4, R.drawable.disponibilidad, "Consultar disponibilidad"));
+        menu.add(new MenuDTO(4, R.drawable.disponibilidad, "Vendido por país"));
         menu.add(new MenuDTO(5, R.drawable.usado, "Consultar usado"));
         menu.add(new MenuDTO(6, R.drawable.clientes, "Crear cliente"));
 
@@ -66,6 +66,18 @@ public class MenuActivity extends AppCompatActivity {
                         case 3:
 
                             i = new Intent(view.getContext(), VentasDiaActivity.class);
+                            startActivity(i);
+                            break;
+
+                        case 4:
+
+                            i = new Intent(view.getContext(), VendidoPorPaisActivity.class);
+                            startActivity(i);
+                            break;
+
+                        case 5:
+
+                            i = new Intent(view.getContext(), ConsultarUsadoActivitty.class);
                             startActivity(i);
                             break;
 

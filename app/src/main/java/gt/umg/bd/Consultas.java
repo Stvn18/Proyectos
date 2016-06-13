@@ -3,7 +3,9 @@ package gt.umg.bd;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import gt.umg.configuracion.configuracion;
 import gt.umg.dto.EmpresaClienteDTO;
@@ -12,6 +14,7 @@ import gt.umg.dto.ServiciosDTO;
 import gt.umg.dto.ServidorDTO;
 import gt.umg.dto.TipoEmpresaDTO;
 import gt.umg.dto.VentaDiariaDTO;
+import gt.umg.dto.VentasPorPaisDTO;
 
 /**
  * Created by Steven Vargas, Dulce Cajas on 1/06/16.
@@ -381,6 +384,67 @@ public class Consultas {
         }
 
         return respuesta;
+
+    }
+
+    public List<VentasPorPaisDTO> getVendidoPorPais() throws Exception {
+
+        List<VentasPorPaisDTO> resultado = new ArrayList<>();
+
+        String sql = " SELECT PAIS.nombre PAIS, SUM(TAMANO.CANTIDAD_CONTRATADA) VENDIDO " +
+                " FROM EMPRESA_CLIENTE EMPRESA  " +
+                "   INNER JOIN CONTRATO_EMPRESA CONTRATO " +
+                " ON EMPRESA.id_empresa = CONTRATO.id_empresa  " +
+                "   INNER JOIN PAIS " +
+                "  ON PAIS.id_pais = EMPRESA.id_pais " +
+                "   INNER JOIN TAMANO_ESPACIO_CONTRATADO TAMANO  " +
+                "  ON CONTRATO.id_contrato = TAMANO.id_contrato " +
+                " GROUP BY PAIS.NOMBRE ";
+
+        ResultSet resultSet = getDatos(sql);
+
+        if (resultSet != null) {
+            resultSet.beforeFirst();
+
+            while (resultSet.next()) {
+
+                VentasPorPaisDTO vendido = new VentasPorPaisDTO();
+
+                vendido.setPais(resultSet.getString("PAIS"));
+                vendido.setVendido(resultSet.getInt("VENDIDO"));
+
+                resultado.add(vendido);
+
+            }
+        }
+
+        return resultado;
+    }
+
+    public Object[] getEspacioUsado() throws Exception {
+
+        Object[] resultado = new Object[]{};
+
+        String sql = " SELECT SUM(TAM_ALMAC.USADO_V) ESPACIO_VENDIDO, SUM((DDSERVIDOR.TAMANO_TOTAL-TAM_ALMAC.USADO_V)) ESPACIO_POR_VENDER " +
+                " FROM TAM_ALMAC " +
+                "   JOIN DDSERVIDOR " +
+                "  ON DDSERVIDOR.ID_DD = TAM_ALMAC.ID_DD ";
+
+        ResultSet resultSet = getDatos(sql);
+
+        if (resultSet != null) {
+
+            resultSet.beforeFirst();
+
+            while (resultSet.next()) {
+
+                resultado = new Object[]{resultSet.getInt("ESPACIO_VENDIDO"), resultSet.getInt("ESPACIO_POR_VENDER")};
+
+            }
+
+        }
+
+        return resultado;
 
     }
 

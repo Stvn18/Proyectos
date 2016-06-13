@@ -7,36 +7,19 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="gt.umg.proyectofinal.VentasDiaActivity"
+    tools:context="gt.umg.proyectofinal.VendidoPorPaisActivity"
     android:orientation="vertical">
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <AutoCompleteTextView
-            android:id="@+id/VentaDiaFecha"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Ingrese fecha a buscar"
-            android:inputType="date"
-            android:maxLines="1"
-            android:singleLine="true" />
-
-    </LinearLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/VentaDiaBotonConsultar"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Consultar"
+            android:text="Vendido por pais"
+            android:textSize="20dp"
             android:layout_gravity="center" />
 
     </LinearLayout>
@@ -48,40 +31,45 @@
         android:background="#A4A4A4">
 
         <TextView
-            android:id="@+id/VentaDiariaEmpresaNombre"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.2"
-            android:text="Cliente" />
+            android:text="Pais" />
 
         <TextView
-            android:id="@+id/VentaDiariaServicioNombre"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.2"
-            android:text="Servicio" />
-
-        <TextView
-            android:id="@+id/VentaDiariaCantidadContratado"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.2"
-            android:text="Contratado" />
-
-        <TextView
-            android:id="@+id/VentaDiariaCostoTotal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.2"
-            android:text="Costo" />
+            android:text="Vendido" />
 
     </LinearLayout>
 
     <ListView
-        android:id="@+id/VentaDiaListResultado"
+        android:id="@+id/VendidoPorPaisList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
     </ListView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#A4A4A4">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:text="Total vendido" />
+
+        <TextView
+            android:id="@+id/VendidoPorPaisTotalVendido"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:text="0" />
+
+    </LinearLayout>
 
 </LinearLayout>

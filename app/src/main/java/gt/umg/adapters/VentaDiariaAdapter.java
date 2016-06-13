@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import gt.umg.dto.MenuDTO;
@@ -38,6 +39,9 @@ public class VentaDiariaAdapter extends ArrayAdapter<VentaDiariaDTO> {
             listItemView = inflater.inflate(R.layout.venta_diaria_template, parent, false);
         }
 
+        DecimalFormat decimalFormat = new DecimalFormat("###,###.##");
+        DecimalFormat integerFormat = new DecimalFormat("###,###");
+
         VentaDiariaDTO item = getItem(position);
 
         TextView empresaNombre = (TextView) listItemView.findViewById(R.id.VentaDiariaEmpresaNombre);
@@ -47,8 +51,8 @@ public class VentaDiariaAdapter extends ArrayAdapter<VentaDiariaDTO> {
 
         empresaNombre.setText(item.getEmpresaNombre());
         servicioNombre.setText(item.getServicioNombre());
-        costoTotal.setText(Integer.toString(item.getContratoCostoTotal()));
-        cantidadContratada.setText(Integer.toString(item.getCantidadContratada()));
+        costoTotal.setText(decimalFormat.format(item.getContratoCostoTotal()));
+        cantidadContratada.setText(integerFormat.format(item.getCantidadContratada()));
 
         return listItemView;
 

@@ -26,7 +26,9 @@
         <activity android:name=".CrearClienteActivity" />
         <activity android:name=".CrearContratoActivity" />
         <activity android:name=".ConfigurarActivity" />
-        <activity android:name=".VentasDiaActivity"></activity>
+        <activity android:name=".VentasDiaActivity" />
+        <activity android:name=".VendidoPorPaisActivity" />
+        <activity android:name=".ConsultarUsadoActivitty"></activity>
     </application>
 
 </manifest>
