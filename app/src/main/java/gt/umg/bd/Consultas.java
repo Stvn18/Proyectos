@@ -237,7 +237,7 @@ public class Consultas {
 
         List<EmpresaClienteDTO> respuesta = new ArrayList<>();
 
-        ResultSet resultSet = getDatos("SELECT NOMBRE, DIRECCION, IP_PUBLICA, DISTRIBUIDO, ID_PAIS, TIPO_EMPRESA_ID " +
+        ResultSet resultSet = getDatos("SELECT ID_EMPRESA, NOMBRE, DIRECCION, IP_PUBLICA, DISTRIBUIDO, ID_PAIS, TIPO_EMPRESA_ID " +
                 "FROM BDD_NUBE.EMPRESA_CLIENTE ");
 
         if (resultSet != null) {
@@ -247,6 +247,7 @@ public class Consultas {
 
                 EmpresaClienteDTO empresa = new EmpresaClienteDTO();
 
+                empresa.setId(resultSet.getInt("ID_EMPRESA"));
                 empresa.setNombre(resultSet.getString("NOMBRE"));
                 empresa.setDireccion(resultSet.getString("DIRECCION"));
                 empresa.setIpPublica(resultSet.getString("IP_PUBLICA"));

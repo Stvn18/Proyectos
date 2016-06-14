@@ -11,6 +11,7 @@ public class EmpresaClienteDTO {
     WHERE ID_EMPRESA=10;
     */
 
+    private int id;
     private String nombre;
     private String direccion;
     private String ipPublica;
@@ -21,13 +22,22 @@ public class EmpresaClienteDTO {
     public EmpresaClienteDTO() {
     }
 
-    public EmpresaClienteDTO(String nombre, String direccion, String ipPublica, String distribuido, int idPais, int tipoEmpresaId) {
+    public EmpresaClienteDTO(int id, String nombre, String direccion, String ipPublica, String distribuido, int idPais, int tipoEmpresaId) {
+        this.id = id;
         this.nombre = nombre;
         this.direccion = direccion;
         this.ipPublica = ipPublica;
         this.distribuido = distribuido;
         this.idPais = idPais;
         this.tipoEmpresaId = tipoEmpresaId;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNombre() {

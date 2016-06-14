@@ -121,7 +121,7 @@ public class CrearContratoActivity extends AppCompatActivity {
             EmpresaClienteDTO _empresa = (EmpresaClienteDTO) empresas.getSelectedItem();
             ServidorDTO _servidor = (ServidorDTO) servidores.getSelectedItem();
 
-            c.crearContrato(_empresa.getTipoEmpresaId(), _servicio.getIdServicio(), Integer.parseInt(costo.getText().toString()), fecha.getText().toString(), Integer.parseInt(cantidad.getText().toString()), _servidor.getIdServ());
+            c.crearContrato(_empresa.getId(), _servicio.getIdServicio(), Integer.parseInt(costo.getText().toString()), fecha.getText().toString(), Integer.parseInt(cantidad.getText().toString()), _servidor.getIdServ());
 
             Toast.makeText(this, "Contrato ingresado exitosamente", Toast.LENGTH_SHORT).show();
 
