@@ -363,7 +363,8 @@ public class Consultas {
                 "  ON TAMANO_ESPACIO_CONTRATADO.ID_CONTRATO = CONTRATO_EMPRESA.ID_CONTRATO " +
                 "   INNER JOIN EMPRESA_CLIENTE " +
                 "  ON EMPRESA_CLIENTE.ID_EMPRESA = CONTRATO_EMPRESA.ID_EMPRESA " +
-                " WHERE CONTRATO_EMPRESA.fecha = TO_DATE ('" + fecha + "', 'dd/MM/yyyy') ";
+                " WHERE CONTRATO_EMPRESA.fecha = TO_DATE ('" + fecha + "', 'dd/MM/yyyy') " +
+                " AND CONTRATO.id_usuario = " + configuracion.idUsuario;
 
         ResultSet resultSet = getDatos(sql);
 
