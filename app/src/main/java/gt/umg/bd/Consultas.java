@@ -334,7 +334,7 @@ public class Consultas {
 
         int max = 0;
 
-        Object o = getDato(" select max(ID_CONTRATO) from  BDD_NUBE.CONTRATO_EMPRESA ");
+        Object o = getDato(" select max(ID_CONTRATO) from  BDD_NUBE.CONTRATO_EMPRESA where id_usuario = " + configuracion.idUsuario);
 
         if (o != null) {
             max = Integer.parseInt(o.toString());
